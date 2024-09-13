@@ -34,7 +34,7 @@ def _cleanup(db_catalog,db_schema,obj = 'all'):
   if obj in ['table','all']:
 
     # tables
-    df = cleanup_df.where("table_type <> 'VIEW'").drop('table_type')
+    df = cleanup_df.where("table_type in ('MANAGED','EXTERNAL') ").drop('table_type')
     objects = [x.table_name for x in df.collect()]
 
     for object in objects:
