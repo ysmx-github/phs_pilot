@@ -1,0 +1,4 @@
+client: "1"
+dependencies:
+  - pyyaml
+  - colorama
