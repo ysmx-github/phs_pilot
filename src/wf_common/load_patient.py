@@ -1,6 +1,6 @@
 # Databricks notebook source
 # DBTITLE 1,imports
-# MAGIC %run ./f_common_premiere
+# MAGIC %run ./f_common
 
 # COMMAND ----------
 
@@ -11,7 +11,7 @@
 
 # DBTITLE 1,parameters
 # widget
-dbutils.widgets.text('yaml_file','',"CONFIG FILE")
+dbutils.widgets.text('yaml_file','./../wf_common/config.yaml',"CONFIG FILE")
 dbutils.widgets.text('patient_table','patient',"PATIENT TABLE")
 dbutils.widgets.text('patient_table_path','',"TABLE PATH")
 
