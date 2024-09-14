@@ -1,7 +1,7 @@
 -- Databricks notebook source
 -- DBTITLE 1,setup widgets
--- create widget text catalog default '';
--- create widget text target_folder default '';
+create widget text catalog default '';
+create widget text target_folder default '';
 
 -- COMMAND ----------
 
@@ -41,14 +41,6 @@ create volume if not exists $catalog.clinical_raw.clinical_data_volume;
 -- MAGIC print(dbutils.fs.mkdirs(target_folder_full), dbutils.fs.ls(f'/Volumes/{catalog}/clinical_raw/clinical_data_volume/dbr_ddl_clinical'))
 -- MAGIC
 -- MAGIC print('Created folder:', target_folder_full)
-
--- COMMAND ----------
-
--- MAGIC %python
--- MAGIC
--- MAGIC # dbutils.fs.rm(f'/Volumes/{catalog}/clinical_raw/clinical_data_volume/dbr_ddl_clinical')
--- MAGIC
--- MAGIC
 
 -- COMMAND ----------
 

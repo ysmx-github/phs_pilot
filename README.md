@@ -22,7 +22,7 @@
 12. Open Workflows
   1. Run `phs_wf1` workflow, review workflow and results
   2. Run `phs_wf2` workflow, review workflow and results
-  3. Run `phs_wf2` workflow, review workflow and results
+  3. Run `phs_wf3` workflow, review workflow and results
 13. Open `/Workspace/Users/firstname.lastname@databricks.com/phs_pilot/src/wf3/wf3_dlt_test.sql`
    1. Select all
    2. Copy
