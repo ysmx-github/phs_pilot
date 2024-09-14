@@ -28,6 +28,7 @@ params = { 'yaml_file': yaml_file
           ,"source_schema": conf['clinical']['source_schema']
           ,"db_catalog": conf['dbr']['db_catalog']          
           ,"db_schema": conf['dbr']['db_schema']
+          ,'volume': conf['dbr']['volume']
           ,"mode": conf['dbr']['mode']
           ,"target_folder": conf['dbr']['target_folder']
           ,"cleanup": dbutils.widgets.get('cleanup')
@@ -36,6 +37,9 @@ params = { 'yaml_file': yaml_file
 # create params  
 for k, v in params.items():
   exec(f'{k}="{v}"')
+
+ddl_path = f"{volume}/{ddl_path}"
+target_folder = f"{volume}/{target_folder}"
 
 # string to bool transform
 cleanup = eval(cleanup)
@@ -56,18 +60,10 @@ for k in params: print(f'\t{k} - ',eval(k), eval(f'type({k})'))
 # DBTITLE 1,cleanup
 # cleanup
 if cleanup:
-  _cleanup(db_catalog,db_schema)
-    
-  # files
-  try:
-    for f in [x.path for x in dbutils.fs.ls(f'{target_folder}/table')] \
-            +[x.path for x in dbutils.fs.ls(f'{target_folder}/view')] \
-            +[x.path for x in dbutils.fs.ls(f'{target_folder}/data')] \
-            +[x.path for x in dbutils.fs.ls(f'{target_folder}/index')]:
-      dbutils.fs.rm(f)
-  except:
-    pass
   
+  _cleanup_catalog (db_catalog,db_schema)
+  _cleanup_files (target_folder, folders)
+
   print(Fore.YELLOW+'\033[1m'+'Cleanup done!')
 else:
   print(Fore.YELLOW+'\033[1m'+'Cleanup not required!')

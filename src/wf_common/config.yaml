@@ -1,5 +1,5 @@
 clinical:
-  ddl_path: /Volumes/clinical/clinical_raw/clinical_data_volume/emr_ddl_clinical/clinical
+  ddl_path: emr_ddl_clinical/clinical
   folders:
     - table
     - view
@@ -9,5 +9,9 @@ clinical:
 dbr:
   db_catalog: clinical
   db_schema: clinical_bronze
+  volume: /Volumes/clinical/clinical_raw/clinical_data_volume
   mode: overwrite
-  target_folder: /Volumes/clinical/clinical_raw/clinical_data_volume/dbr_ddl_clinical
+  target_folder: dbr_ddl_clinical
+patient:
+  patient_table: patient
+  patient_table_path: data/patient/patient.txt

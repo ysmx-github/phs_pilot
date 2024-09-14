@@ -7,13 +7,16 @@ from colorama import Fore
 # COMMAND ----------
 
 # DBTITLE 1,functions
+# ##################################
 _get_config = lambda yaml_file: yaml.full_load(open(yaml_file))
 
+# ##################################
 def _create_ddl_folder(target_folder, obj):
   fldr = f"{target_folder}/{obj}/"
   dbutils.fs.mkdirs(fldr)
   return fldr
 
+# ##################################
 def _write_ddl(fldr,object,sql='',l=[]):
   with open(f"{fldr}/{object}.sql", "w") as fw:
     if l:
@@ -24,7 +27,8 @@ def _write_ddl(fldr,object,sql='',l=[]):
       fw.write(sql)
       fw.write(';')
 
-def _cleanup(db_catalog,db_schema,obj = 'all'):
+# ##################################
+def _cleanup_catalog (db_catalog, db_schema, obj = 'all'):
   cleanup_df = spark.sql(f"""select table_name, table_type 
                                from {db_catalog}.information_schema.tables 
                               where table_catalog = '{db_catalog}' 
@@ -48,3 +52,12 @@ def _cleanup(db_catalog,db_schema,obj = 'all'):
 
     for object in objects:
       spark.sql(f"drop view if exists {db_catalog}.{db_schema}.{object}")
+  
+# ##################################
+def _cleanup_files (target_folder, folders):
+  try:
+    for folder in folders:
+      for f in [x.path for x in dbutils.fs.ls(f'{target_folder}/{folder}')]:
+        dbutils.fs.rm(f)
+  except:
+    pass

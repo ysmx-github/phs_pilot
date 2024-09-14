@@ -12,8 +12,6 @@
 # DBTITLE 1,parameters
 # widget
 dbutils.widgets.text('yaml_file','./../wf_common/config.yaml',"CONFIG FILE")
-dbutils.widgets.text('patient_table','patient',"PATIENT TABLE")
-dbutils.widgets.text('patient_table_path','',"TABLE PATH")
 
 # config yaml file
 yaml_file = dbutils.widgets.get('yaml_file')
@@ -22,15 +20,19 @@ conf = _get_config(yaml_file)
 
 # params dict
 params = { 'yaml_file': yaml_file
-          ,'patient_table': dbutils.widgets.get('patient_table')
-          ,"patient_table_path": dbutils.widgets.get('patient_table_path')
+          ,'patient_table': conf['patient']['patient_table']
+          ,'patient_table_path': conf['patient']['patient_table_path']
           ,"db_catalog": conf['dbr']['db_catalog']          
           ,"db_schema": conf['dbr']['db_schema']
+          ,'volume': conf['dbr']['volume']
           ,"mode": conf['dbr']['mode'] } 
+
 
 # create params  
 for k, v in params.items():
   exec(f'{k}="{v}"')
+
+patient_table_path = f'{volume}/{patient_table_path}'
 
 # print result
 print('Parameters:')

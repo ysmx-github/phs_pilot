@@ -28,12 +28,16 @@ params = { 'yaml_file': yaml_file
           ,"db_catalog": conf['dbr']['db_catalog']          
           ,"db_schema": conf['dbr']['db_schema']
           ,"mode": conf['dbr']['mode']
+          ,'volume': conf['dbr']['volume']
           ,"target_folder": conf['dbr']['target_folder']
           ,"clustering": dbutils.widgets.get('clustering') }
 
 # create params  
 for k, v in params.items():
   exec(f'{k}="{v}"')
+
+ddl_path = f"{volume}/{ddl_path}"
+target_folder = f"{volume}/{target_folder}"
 
 # string to bool transform
 clustering = eval(clustering)
