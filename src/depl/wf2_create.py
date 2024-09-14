@@ -89,7 +89,7 @@ body = {
       "condition_task": {
         "op": "EQUAL_TO",
         "left": "{{job.parameters.run_table}}",
-        "right": "True"
+        "right": "true"
       },
       "timeout_seconds": 0,
       "email_notifications": {},
@@ -146,7 +146,7 @@ body = {
       "condition_task": {
         "op": "EQUAL_TO",
         "left": "{{job.parameters.run_alter}}",
-        "right": "True"
+        "right": "true"
       },
       "timeout_seconds": 0,
       "email_notifications": {},
@@ -191,7 +191,7 @@ body = {
       "condition_task": {
         "op": "EQUAL_TO",
         "left": "{{job.parameters.run_insert}}",
-        "right": "True"
+        "right": "true"
       },
       "timeout_seconds": 0,
       "email_notifications": {},
@@ -240,7 +240,7 @@ body = {
       "condition_task": {
         "op": "EQUAL_TO",
         "left": "{{job.parameters.run_liquid_clistering}}",
-        "right": "True"
+        "right": "true"
       },
       "timeout_seconds": 0,
       "email_notifications": {},
@@ -304,7 +304,7 @@ body = {
       "condition_task": {
         "op": "EQUAL_TO",
         "left": "{{job.parameters.run_patient_load}}",
-        "right": "True"
+        "right": "true"
       },
       "timeout_seconds": 0,
       "email_notifications": {},
@@ -365,7 +365,7 @@ body = {
       "condition_task": {
         "op": "EQUAL_TO",
         "left": "{{job.parameters.run_view}}",
-        "right": "True"
+        "right": "true"
       },
       "timeout_seconds": 0,
       "email_notifications": {},
@@ -417,7 +417,12 @@ body = {
       "job_cluster_key": "wf2_cluster",
       "new_cluster": {
         "cluster_name": "",
-        "spark_version": "15.4.x-scala2.12",       
+        "spark_version": "15.4.x-scala2.12",
+        "azure_attributes": {
+            "first_on_demand": 1,
+            "availability": "SPOT_WITH_FALLBACK_AZURE",
+            "spot_bid_max_price": -1
+          },       
         "node_type_id": "Standard_D4ds_v5",
         "spark_env_vars": {
           "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
@@ -435,31 +440,31 @@ body = {
   "parameters": [
     {
       "name": "run_alter",
-      "default": "True"
+      "default": "true"
     },
     {
       "name": "run_cleanup",
-      "default": "True"
+      "default": "true"
     },
     {
       "name": "run_insert",
-      "default": "True"
+      "default": "true"
     },
     {
       "name": "run_liquid_clistering",
-      "default": "True"
+      "default": "true"
     },
     {
       "name": "run_patient_load",
-      "default": "True"
+      "default": "true"
     },
     {
       "name": "run_table",
-      "default": "True"
+      "default": "true"
     },
     {
       "name": "run_view",
-      "default": "True"
+      "default": "true"
     },
     {
       "name": "yaml_file",
