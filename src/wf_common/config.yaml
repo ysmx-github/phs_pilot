@@ -1,5 +1,5 @@
 clinical:
-  ddl_path: /Volumes/ysm/ysm_schema/ysm_schema_vol/premiere/emr_ddl_clinical/clinical
+  ddl_path: /Volumes/clinical/clinical_raw/clinical_data_volume/emr_ddl_clinical/clinical
   folders:
     - table
     - view
@@ -7,7 +7,7 @@ clinical:
     - data
   source_schema: clinical
 dbr:
-  db_catalog: ysm
-  db_schema: clinical
+  db_catalog: clinical
+  db_schema: clinical_bronze
   mode: overwrite
-  target_folder: /Volumes/ysm/ysm_schema/ysm_schema_vol/premiere/dbr_ddl_clinical
+  target_folder: /Volumes/clinical/clinical_raw/clinical_data_volume/dbr_ddl_clinical
