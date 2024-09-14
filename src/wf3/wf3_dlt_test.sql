@@ -46,7 +46,9 @@ select * from patient_dlt where patient_sk = 9204691118228220899+1;
 
 ---------------------
 
--- select count(*) cnt from patient;
+select count(*) cnt from patient
+union all
+select count(*) cnt from clinical_silver.patient_dlt;
 
 -- select count (distinct patient_sk)
 --       ,count (distinct patient_bk) 
