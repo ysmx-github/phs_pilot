@@ -7,9 +7,9 @@ clinical:
     - data
   source_schema: clinical
 dbr:
-  db_catalog: clinical
+  db_catalog: dbr_ssa_clinical
   db_schema: clinical_bronze
-  volume: /Volumes/clinical/clinical_raw/clinical_data_volume
+  volume: /Volumes/dbr_ssa_clinical/clinical_raw/clinical_data_volume
   mode: overwrite
   target_folder: dbr_ddl_clinical
 patient:
