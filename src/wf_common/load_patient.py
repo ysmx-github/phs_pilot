@@ -32,6 +32,7 @@ params = { 'yaml_file': yaml_file
 for k, v in params.items():
   exec(f'{k}="{v}"')
 
+volume = f"/Volumes/{db_catalog}/{volume}"
 patient_table_path = f'{volume}/{patient_table_path}'
 
 # print result

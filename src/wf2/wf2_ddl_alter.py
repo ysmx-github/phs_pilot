@@ -33,6 +33,7 @@ params = { 'yaml_file': yaml_file
 for k, v in params.items():
   exec(f'{k}="{v}"')
 
+volume = f"/Volumes/{db_catalog}/{volume}"
 ddl_path = f"{volume}/{ddl_path}"
 target_folder = f"{volume}/{target_folder}"
 
