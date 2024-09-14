@@ -1,7 +1,22 @@
-{
+# Databricks notebook source
+# DBTITLE 1,imports
+import json, requests
+
+# COMMAND ----------
+
+# DBTITLE 1,substitutions
+notebook_context = dbutils.notebook.entry_point.getDbutils().notebook().getContext()
+user = notebook_context.userName().get()
+
+
+# COMMAND ----------
+
+# DBTITLE 1,body
+
+body = {
   "name": "phs_wf2",
   "email_notifications": {
-    "no_alert_for_skipped_runs": false
+    "no_alert_for_skipped_runs": False
   },
   "webhook_notifications": {},
   "timeout_seconds": 0,
@@ -18,9 +33,9 @@
       "timeout_seconds": 0,
       "email_notifications": {},
       "notification_settings": {
-        "no_alert_for_skipped_runs": false,
-        "no_alert_for_canceled_runs": false,
-        "alert_on_last_attempt": false
+        "no_alert_for_skipped_runs": False,
+        "no_alert_for_canceled_runs": False,
+        "alert_on_last_attempt": False
       },
       "webhook_notifications": {}
     },
@@ -34,7 +49,7 @@
       ],
       "run_if": "ALL_SUCCESS",
       "notebook_task": {
-        "notebook_path": "/Workspace/Users/yuriy.margulis@databricks.com/phs_pilot/src/wf2/wf2_ddl_cleanup",
+        "notebook_path": f"/Workspace/Users/{user}/phs_pilot/src/wf2/wf2_ddl_cleanup",
         "source": "WORKSPACE"
       },
       "job_cluster_key": "wf2_cluster",
@@ -53,9 +68,9 @@
       "timeout_seconds": 0,
       "email_notifications": {},
       "notification_settings": {
-        "no_alert_for_skipped_runs": false,
-        "no_alert_for_canceled_runs": false,
-        "alert_on_last_attempt": false
+        "no_alert_for_skipped_runs": False,
+        "no_alert_for_canceled_runs": False,
+        "alert_on_last_attempt": False
       },
       "webhook_notifications": {}
     },
@@ -74,14 +89,14 @@
       "condition_task": {
         "op": "EQUAL_TO",
         "left": "{{job.parameters.run_table}}",
-        "right": "true"
+        "right": "True"
       },
       "timeout_seconds": 0,
       "email_notifications": {},
       "notification_settings": {
-        "no_alert_for_skipped_runs": false,
-        "no_alert_for_canceled_runs": false,
-        "alert_on_last_attempt": false
+        "no_alert_for_skipped_runs": False,
+        "no_alert_for_canceled_runs": False,
+        "alert_on_last_attempt": False
       },
       "webhook_notifications": {}
     },
@@ -95,7 +110,7 @@
       ],
       "run_if": "ALL_SUCCESS",
       "notebook_task": {
-        "notebook_path": "/Workspace/Users/yuriy.margulis@databricks.com/phs_pilot/src/wf2/wf2_ddl_table",
+        "notebook_path": f"/Workspace/Users/{user}/phs_pilot/src/wf2/wf2_ddl_table",
         "source": "WORKSPACE"
       },
       "job_cluster_key": "wf2_cluster",
@@ -114,9 +129,9 @@
       "timeout_seconds": 0,
       "email_notifications": {},
       "notification_settings": {
-        "no_alert_for_skipped_runs": false,
-        "no_alert_for_canceled_runs": false,
-        "alert_on_last_attempt": false
+        "no_alert_for_skipped_runs": False,
+        "no_alert_for_canceled_runs": False,
+        "alert_on_last_attempt": False
       },
       "webhook_notifications": {}
     },
@@ -131,14 +146,14 @@
       "condition_task": {
         "op": "EQUAL_TO",
         "left": "{{job.parameters.run_alter}}",
-        "right": "true"
+        "right": "True"
       },
       "timeout_seconds": 0,
       "email_notifications": {},
       "notification_settings": {
-        "no_alert_for_skipped_runs": false,
-        "no_alert_for_canceled_runs": false,
-        "alert_on_last_attempt": false
+        "no_alert_for_skipped_runs": False,
+        "no_alert_for_canceled_runs": False,
+        "alert_on_last_attempt": False
       },
       "webhook_notifications": {}
     },
@@ -152,16 +167,16 @@
       ],
       "run_if": "ALL_SUCCESS",
       "notebook_task": {
-        "notebook_path": "/Workspace/Users/yuriy.margulis@databricks.com/phs_pilot/src/wf2/wf2_ddl_alter",
+        "notebook_path": f"/Workspace/Users/{user}/phs_pilot/src/wf2/wf2_ddl_alter",
         "source": "WORKSPACE"
       },
       "job_cluster_key": "wf2_cluster",
       "timeout_seconds": 0,
       "email_notifications": {},
       "notification_settings": {
-        "no_alert_for_skipped_runs": false,
-        "no_alert_for_canceled_runs": false,
-        "alert_on_last_attempt": false
+        "no_alert_for_skipped_runs": False,
+        "no_alert_for_canceled_runs": False,
+        "alert_on_last_attempt": False
       },
       "webhook_notifications": {}
     },
@@ -176,14 +191,14 @@
       "condition_task": {
         "op": "EQUAL_TO",
         "left": "{{job.parameters.run_insert}}",
-        "right": "true"
+        "right": "True"
       },
       "timeout_seconds": 0,
       "email_notifications": {},
       "notification_settings": {
-        "no_alert_for_skipped_runs": false,
-        "no_alert_for_canceled_runs": false,
-        "alert_on_last_attempt": false
+        "no_alert_for_skipped_runs": False,
+        "no_alert_for_canceled_runs": False,
+        "alert_on_last_attempt": False
       },
       "webhook_notifications": {}
     },
@@ -197,16 +212,16 @@
       ],
       "run_if": "ALL_SUCCESS",
       "notebook_task": {
-        "notebook_path": "/Workspace/Users/yuriy.margulis@databricks.com/phs_pilot/src/wf2/wf2_ddl_insert",
+        "notebook_path": f"/Workspace/Users/{user}/phs_pilot/src/wf2/wf2_ddl_insert",
         "source": "WORKSPACE"
       },
       "job_cluster_key": "wf2_cluster",
       "timeout_seconds": 0,
       "email_notifications": {},
       "notification_settings": {
-        "no_alert_for_skipped_runs": false,
-        "no_alert_for_canceled_runs": false,
-        "alert_on_last_attempt": false
+        "no_alert_for_skipped_runs": False,
+        "no_alert_for_canceled_runs": False,
+        "alert_on_last_attempt": False
       },
       "webhook_notifications": {}
     },
@@ -225,14 +240,14 @@
       "condition_task": {
         "op": "EQUAL_TO",
         "left": "{{job.parameters.run_liquid_clistering}}",
-        "right": "true"
+        "right": "True"
       },
       "timeout_seconds": 0,
       "email_notifications": {},
       "notification_settings": {
-        "no_alert_for_skipped_runs": false,
-        "no_alert_for_canceled_runs": false,
-        "alert_on_last_attempt": false
+        "no_alert_for_skipped_runs": False,
+        "no_alert_for_canceled_runs": False,
+        "alert_on_last_attempt": False
       },
       "webhook_notifications": {}
     },
@@ -246,7 +261,7 @@
       ],
       "run_if": "ALL_SUCCESS",
       "notebook_task": {
-        "notebook_path": "/Workspace/Users/yuriy.margulis@databricks.com/phs_pilot/src/wf2/wf2_ddl_cluster",
+        "notebook_path": f"/Workspace/Users/{user}/phs_pilot/src/wf2/wf2_ddl_cluster",
         "base_parameters": {
           "clustering": "False"
         },
@@ -268,9 +283,9 @@
       "timeout_seconds": 0,
       "email_notifications": {},
       "notification_settings": {
-        "no_alert_for_skipped_runs": false,
-        "no_alert_for_canceled_runs": false,
-        "alert_on_last_attempt": false
+        "no_alert_for_skipped_runs": False,
+        "no_alert_for_canceled_runs": False,
+        "alert_on_last_attempt": False
       },
       "webhook_notifications": {}
     },
@@ -289,14 +304,14 @@
       "condition_task": {
         "op": "EQUAL_TO",
         "left": "{{job.parameters.run_patient_load}}",
-        "right": "true"
+        "right": "True"
       },
       "timeout_seconds": 0,
       "email_notifications": {},
       "notification_settings": {
-        "no_alert_for_skipped_runs": false,
-        "no_alert_for_canceled_runs": false,
-        "alert_on_last_attempt": false
+        "no_alert_for_skipped_runs": False,
+        "no_alert_for_canceled_runs": False,
+        "alert_on_last_attempt": False
       },
       "webhook_notifications": {}
     },
@@ -310,11 +325,7 @@
       ],
       "run_if": "ALL_SUCCESS",
       "notebook_task": {
-        "notebook_path": "/Workspace/Users/yuriy.margulis@databricks.com/phs_pilot/src/wf_common/load_patient",
-        "base_parameters": {
-          "patient_table_path": "/Volumes/ysm/ysm_schema/ysm_schema_vol/premiere/data/patient/patient.txt",
-          "patient_table": "patient"
-        },
+        "notebook_path": f"/Workspace/Users/{user}/phs_pilot/src/wf_common/load_patient",
         "source": "WORKSPACE"
       },
       "job_cluster_key": "wf2_cluster",
@@ -333,9 +344,9 @@
       "timeout_seconds": 0,
       "email_notifications": {},
       "notification_settings": {
-        "no_alert_for_skipped_runs": false,
-        "no_alert_for_canceled_runs": false,
-        "alert_on_last_attempt": false
+        "no_alert_for_skipped_runs": False,
+        "no_alert_for_canceled_runs": False,
+        "alert_on_last_attempt": False
       },
       "webhook_notifications": {}
     },
@@ -354,14 +365,14 @@
       "condition_task": {
         "op": "EQUAL_TO",
         "left": "{{job.parameters.run_view}}",
-        "right": "true"
+        "right": "True"
       },
       "timeout_seconds": 0,
       "email_notifications": {},
       "notification_settings": {
-        "no_alert_for_skipped_runs": false,
-        "no_alert_for_canceled_runs": false,
-        "alert_on_last_attempt": false
+        "no_alert_for_skipped_runs": False,
+        "no_alert_for_canceled_runs": False,
+        "alert_on_last_attempt": False
       },
       "webhook_notifications": {}
     },
@@ -375,7 +386,7 @@
       ],
       "run_if": "ALL_SUCCESS",
       "notebook_task": {
-        "notebook_path": "/Workspace/Users/yuriy.margulis@databricks.com/premiere/wf2/wf2_ddl_view",
+        "notebook_path": f"/Workspace/Users/{user}/phs_pilot/src/wf2/wf2_ddl_view",
         "source": "WORKSPACE"
       },
       "job_cluster_key": "wf2_cluster",
@@ -394,9 +405,9 @@
       "timeout_seconds": 0,
       "email_notifications": {},
       "notification_settings": {
-        "no_alert_for_skipped_runs": false,
-        "no_alert_for_canceled_runs": false,
-        "alert_on_last_attempt": false
+        "no_alert_for_skipped_runs": False,
+        "no_alert_for_canceled_runs": False,
+        "alert_on_last_attempt": False
       },
       "webhook_notifications": {}
     }
@@ -406,19 +417,12 @@
       "job_cluster_key": "wf2_cluster",
       "new_cluster": {
         "cluster_name": "",
-        "spark_version": "15.4.x-scala2.12",
-        "aws_attributes": {
-          "first_on_demand": 1,
-          "availability": "SPOT_WITH_FALLBACK",
-          "zone_id": "us-west-2a",
-          "spot_bid_price_percent": 100,
-          "ebs_volume_count": 0
-        },
-        "node_type_id": "r6id.xlarge",
+        "spark_version": "15.4.x-scala2.12",       
+        "node_type_id": "Standard_D4ds_v5",
         "spark_env_vars": {
           "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
         },
-        "enable_elastic_disk": false,
+        "enable_elastic_disk": False,
         "data_security_mode": "SINGLE_USER",
         "runtime_engine": "STANDARD",
         "num_workers": 3
@@ -426,43 +430,57 @@
     }
   ],
   "queue": {
-    "enabled": true
+    "enabled": True
   },
   "parameters": [
     {
       "name": "run_alter",
-      "default": "true"
+      "default": "True"
     },
     {
       "name": "run_cleanup",
-      "default": "true"
+      "default": "True"
     },
     {
       "name": "run_insert",
-      "default": "true"
+      "default": "True"
     },
     {
       "name": "run_liquid_clistering",
-      "default": "true"
+      "default": "True"
     },
     {
       "name": "run_patient_load",
-      "default": "true"
+      "default": "True"
     },
     {
       "name": "run_table",
-      "default": "true"
+      "default": "True"
     },
     {
       "name": "run_view",
-      "default": "true"
+      "default": "True"
     },
     {
       "name": "yaml_file",
-      "default": "/Workspace/Users/yuriy.margulis@databricks.com/premiere/wf_common/config_premiere.yaml"
+      "default": "./../wf_common/config.yaml"
     }
   ],
   "run_as": {
     "user_name": "yuriy.margulis@databricks.com"
   }
 }
+
+# COMMAND ----------
+
+# DBTITLE 1,api call
+
+databricks_url = notebook_context.apiUrl().get()
+api_token = notebook_context.apiToken().get()
+api_headers = {'Authorization': 'Bearer {}'.format(api_token), "Content-Type": "application/json"}
+
+response = requests.post(f"{databricks_url}/api/2.1/jobs/create"
+                        ,headers=api_headers
+                        ,json=body)
+
+response.json()
