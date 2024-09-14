@@ -3,7 +3,7 @@ create schema if not exists databricks_ssa.clinical_raw;
 create schema if not exists databricks_ssa.clinical_bronze;
 create schema if not exists databricks_ssa.clinical_silver;
 
-create volume databricks_ssa.clinical_raw.clinical_data_volume;
+create volume if not exists databricks_ssa.clinical_raw.clinical_data_volume;
 
 -- grant all privileges on catalog databricks_ssa to edm_adm_grp;
 -- grant all privileges on schema databricks_ssa.clinical_raw to edm_adm_grp;
