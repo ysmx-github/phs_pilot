@@ -1,10 +1,16 @@
 # Databricks notebook source
+# DBTITLE 1,imports
 import json, requests
 
-notebook_context = dbutils.notebook.entry_point.getDbutils().notebook().getContext()
+# COMMAND ----------
 
+# DBTITLE 1,substitutions
+notebook_context = dbutils.notebook.entry_point.getDbutils().notebook().getContext()
 user = notebook_context.userName().get()
 
+# COMMAND ----------
+
+# DBTITLE 1,body
 body = {
   "name": "phs_wf1",
   "email_notifications": {
@@ -106,6 +112,10 @@ body = {
   }
 }
 
+
+# COMMAND ----------
+
+# DBTITLE 1,api call
 databricks_url = notebook_context.apiUrl().get()
 api_token = notebook_context.apiToken().get()
 api_headers = {'Authorization': 'Bearer {}'.format(api_token), "Content-Type": "application/json"}
