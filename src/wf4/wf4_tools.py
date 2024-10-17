@@ -5,13 +5,16 @@ import pyspark.sql.functions as F
 
 # COMMAND ----------
 
-# DBTITLE 1,utility functions
+# DBTITLE 1,utilities
 ## read YAML file #########################################################################
 _get_config = lambda yaml_file: yaml.full_load(open(yaml_file))
 
 ### fully qualified table name ############################################################
 _get_table_fq = lambda catalog, target_schema, target_table: f'{catalog}.{target_schema}.{target_table}'
 
+# COMMAND ----------
+
+# DBTITLE 1,table and ddl file creation
 ## create DDL scripts output folder #######################################################
 def _create_ddl_folder(catalog,schema,volume,target_folder):
   fldr = f"/Volumes/{catalog}/{schema}/{volume}/{target_folder}"
@@ -41,7 +44,6 @@ def _create_table(template_file, target_table_fq=None, catalog=None,target_schem
 
 ## alter table add not nullable fields ####################################################
 def _not_null_fields (table_params, target_table_fq, create = False ):
-
   sqls = []
   not_null_fields = table_params['not_null_fields']
   if not_null_fields:
@@ -61,7 +63,6 @@ def _primary_key (table_params, target_table_fq, create = False ):
 
 ## alter table add foreign keys ###########################################################
 def  _foreign_keys (table_params, target_table_fq, catalog, target_schema, create = False):
-
   sqls = []
   foreign_keys = table_params['foreign_keys']
   if foreign_keys:
@@ -95,15 +96,26 @@ def _write_create_ddl (catalog,schema,volume,target_folder,target_table,table_pa
   _create_ddl_folder(catalog,schema,volume,target_folder)
 
   with open(f"/Volumes/{catalog}/{schema}/{volume}/{target_folder}/{target_table}.create.sql", "w") as fw:
+    
+    # create sql
     fw.write(cr_sql)
+
+    # not nulls
     for sql in _not_null_fields (table_params, target_table_fq): 
       fw.write(f'\n{sql};')
+
+    # primary key
     fw.write(f'\n\n{_primary_key (table_params, target_table_fq)};') 
+
+    # foreign keys
     for sql in _foreign_keys (table_params, target_table_fq, catalog, schema): 
       fw.write(f'\n{sql};')
 
   return cr_sql
 
+# COMMAND ----------
+
+# DBTITLE 1,control
 ## insert record into control table #########################################################
 def _insert_control_table (catalog, target_schema, control_table, file_name, cnt):
   spark.sql(f"""insert into {catalog}.{target_schema}.{control_table}  
@@ -119,7 +131,9 @@ def _update_control_table (catalog, target_schema, control_table, file):
                 where file_name = '{file.file_name}'
               """)
 
+# COMMAND ----------
 
+# DBTITLE 1,check
 ## ordinality check #########################################################################
 def _match_ordinality(df, catalog, target_schema, target_table):
 
@@ -146,7 +160,6 @@ def _match_field_names_symmetric(df, catalog, target_schema, target_table):
                               and table_schema = '{target_schema}'
                               and table_name = '{target_table}'""").collect()])
   return not bool(dff^tbf)
-
 
 # COMMAND ----------
 
