@@ -103,7 +103,23 @@ def _write_create_ddl (catalog,schema,volume,target_folder,target_table,table_pa
       fw.write(f'\n{sql};')
 
   return cr_sql
-  
+
+## insert record into control table #########################################################
+def _insert_control_table (catalog, target_schema, control_table, file_name, cnt):
+  spark.sql(f"""insert into {catalog}.{target_schema}.{control_table}  
+                  replace where file_name='{file_name}'
+                  values ('{file_name}',current_timestamp(),{cnt},Null,false)                                          
+            """)
+
+## update control table record ##############################################################
+def _update_control_table (catalog, target_schema, control_table, file):
+  spark.sql(f"""update {catalog}.{target_schema}.{control_table}  
+                  set file_loaded = true 
+                      ,file_processed_timestamp = current_timestamp
+                where file_name = '{file.file_name}'
+              """)
+
+
 ## ordinality check #########################################################################
 def _match_ordinality(df, catalog, target_schema, target_table):
 

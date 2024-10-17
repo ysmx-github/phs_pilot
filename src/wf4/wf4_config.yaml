@@ -6,6 +6,7 @@ parquet:
   source_folder: premiere/parquet
   target_folder: premiere/ddl
   stage_folder: premiere/stage
+  control_table: batch_file_control
   target_tables: 
     - patient_ins: 
         template_file: /Volumes/ysm/ysm_schema/ysm_schema_vol/premiere/parquet/patient_ins.AVERA_snappy.parquet

@@ -30,7 +30,8 @@ params = { 'yaml_file': yaml_file
           ,"target_schema": conf['parquet']['target_schema']
           ,"volume": conf['parquet']['volume']
           ,"source_folder": conf['parquet']['source_folder']
-          ,"stage_folder": conf['parquet']['stage_folder']}
+          ,"stage_folder": conf['parquet']['stage_folder']
+          ,"control_table": conf['parquet']['control_table']}
 
 # create params  
 for k, v in params.items():
@@ -63,10 +64,7 @@ for file_name in file_names:
   delta_flags = ', '.join([x[0] for x in df.select('delta_flg').distinct().collect()])
   
   # insert row into the status table
-  spark.sql(f"""insert into {catalog}.{target_schema}.batch_file_control  
-                  replace where file_name='{file_name}'
-                  values ('{file_name}',current_timestamp(),{cnt},Null,false)                                          
-            """)
+  _insert_control_table (catalog, target_schema, control_table, file_name, cnt)
 
   # print result
   print(f"Copied file {raw_file_location}/{file_name} ({cnt} rows, delta flags: {delta_flags})\n\tto {stage_location}/{file_name}")

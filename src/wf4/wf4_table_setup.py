@@ -86,7 +86,7 @@ for d in target_tables:
 
 # COMMAND ----------
 
-# DBTITLE 1,show results
+# DBTITLE 1,validation
 spark.sql("select * from ysm.information_schema.columns where table_name = 'patient_ins'").display()
 spark.sql("select * from ysm.information_schema.table_constraints where table_name = 'patient_ins'").display()
 

@@ -31,7 +31,9 @@ params = { 'yaml_file': yaml_file
           ,"volume": conf['parquet']['volume']
           ,"source_folder": conf['parquet']['source_folder']
           ,"stage_folder": conf['parquet']['stage_folder']
-          ,"target_tables": conf['parquet']['target_tables']}
+          ,"target_tables": conf['parquet']['target_tables']
+          ,"control_table": conf['parquet']['control_table']}
+
 
 # create params  
 for k, v in params.items():
@@ -50,8 +52,8 @@ for k in params: print(f'\t{k} - ',eval(k), eval(f'type({k})'))
 # DBTITLE 1,load files
 # list new arrived files
 files = spark.sql(f"""select file_name
-                              ,split_part(file_name, '.', 1) tbl
-                          from {catalog}.{target_schema}.batch_file_control 
+                             ,split_part(file_name, '.', 1) tbl
+                         from {catalog}.{target_schema}.batch_file_control 
                         where not file_loaded
                     """).collect()
 
@@ -64,11 +66,7 @@ for file in files:
   spark.sql(merge_sql)
 
   # update status table
-  spark.sql(f"""update {catalog}.{target_schema}.batch_file_control  
-                 set file_loaded = true 
-                    ,file_processed_timestamp = current_timestamp
-               where file_name = '{file.file_name}'
-            """)
+  _update_control_table (catalog, target_schema, control_table, file)
 
   # print result
   print (f"""Loaded file /Volumes/{catalog}/{source_schema}/{volume}/{stage_folder}/{file['file_name']} 
