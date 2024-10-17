@@ -1,4 +1,12 @@
 # Databricks notebook source
+# MAGIC %md
+# MAGIC ### Tables and DDL files generator
+# MAGIC - Full refresh: rebuilds all tables and overwrites all DDL scripts
+# MAGIC - Generates empty tables, doesn't load any data
+# MAGIC - Catalog, source and target schema, volume and locations are set in the configuration YAML file
+
+# COMMAND ----------
+
 # DBTITLE 1,installations
 # MAGIC %pip install pyyaml
 # MAGIC %restart_python
@@ -76,13 +84,19 @@ for d in target_tables:
 
 # DBTITLE 1,generate ddl files
 for d in target_tables:
+  
+  # generate DDL script
   target_table = list(d.keys())[0]
-  print(_write_create_ddl (catalog
-                           ,source_schema  
-                           ,volume
-                           ,target_folder
-                           ,target_table
-                           ,table_params))
+  _write_ddl ( catalog
+              ,source_schema  
+              ,volume
+              ,target_folder
+              ,target_table
+              ,table_params)
+  
+  # read back and print DDL script
+  with open(f"/Volumes/{catalog}/{source_schema}/{volume}/{target_folder}/{target_table}.create.sql", "r") as fw:
+    print(fw.read())
 
 # COMMAND ----------
 
@@ -105,3 +119,6 @@ spark.sql("select * from ysm.information_schema.table_constraints where table_na
 # MAGIC    , file_number_of_rows bigint
 # MAGIC    , file_processed_timestamp timestamp
 # MAGIC    , file_loaded boolean)
+# MAGIC ;
+# MAGIC
+# MAGIC describe extended ysm.premiere.batch_file_control; 

@@ -1,7 +1,17 @@
 # Databricks notebook source
+# MAGIC %md
+# MAGIC ### Function module
+# MAGIC -  Imports
+# MAGIC -  Utilities, table and DDL creation functions, status table functions and validation checks
+# MAGIC -  Merge statement genarator
+# MAGIC
+
+# COMMAND ----------
+
 # DBTITLE 1,imports
-import yaml
+import yaml, datetime, random
 import pyspark.sql.functions as F
+from pyspark.sql.window import Window
 
 # COMMAND ----------
 
@@ -16,13 +26,13 @@ _get_table_fq = lambda catalog, target_schema, target_table: f'{catalog}.{target
 
 # DBTITLE 1,table and ddl file creation
 ## create DDL scripts output folder #######################################################
-def _create_ddl_folder(catalog,schema,volume,target_folder):
+def _create_ddl_folder (catalog,schema,volume,target_folder):
   fldr = f"/Volumes/{catalog}/{schema}/{volume}/{target_folder}"
   dbutils.fs.mkdirs(fldr)
   return fldr
 
 ## create target table ####################################################################
-def _create_table(template_file, target_table_fq=None, catalog=None,target_schema=None,target_table=None):
+def _create_table (template_file, target_table_fq=None, catalog=None,target_schema=None,target_table=None):
 
   if not target_table_fq: target_table_fq = _get_table_fq (catalog,target_schema,target_table)
 
@@ -76,14 +86,14 @@ alter table {target_table_fq}
   add constraint {target_table}_{reference_table}_{fk['name']} 
   foreign key ({reference_key}) 
   references {reference_table_fq} ({reference_key});
-            """
+"""
       if create: spark.sql(sql)
       sqls.append(sql)
 
   return sqls
 
 ## write DDL file #########################################################################
-def _write_create_ddl (catalog,schema,volume,target_folder,target_table,table_params):
+def _write_ddl (catalog,schema,volume,target_folder,target_table,table_params):
   
   target_table_fq = _get_table_fq (catalog,target_schema,target_table)
 
@@ -109,7 +119,7 @@ def _write_create_ddl (catalog,schema,volume,target_folder,target_table,table_pa
 
     # foreign keys
     for sql in _foreign_keys (table_params, target_table_fq, catalog, schema): 
-      fw.write(f'\n{sql};')
+      fw.write(f'\n{sql}')
 
   return cr_sql
 
@@ -150,8 +160,8 @@ def _match_ordinality(df, catalog, target_schema, target_table):
   return match
 
 ## symmetric fileds match check #############################################################
-def _match_field_names_symmetric(df, catalog, target_schema, target_table):
-  dff = set(df.schema.names)
+def _match_field_names_symmetric(df, catalog, target_schema, target_table, drop = ['delta_flg']):
+  dff = set(df.drop(*drop).schema.names)
 
   tbf = set([x.column_name for x in 
              spark.sql(f"""select column_name
@@ -165,7 +175,7 @@ def _match_field_names_symmetric(df, catalog, target_schema, target_table):
 
 # DBTITLE 1,merge
 ## file merge #########################################################################
-def generate_merge_sql(catalog, target_schema, source_schema, volume, stage_folder, file):  
+def generate_merge_sql(catalog, target_schema, source_schema, volume, stage_folder, file, load_type):  
 
   file_name = file['file_name']
   file_path = f"/Volumes/{catalog}/{source_schema}/{volume}/{stage_folder}/{file_name}"
@@ -194,12 +204,16 @@ def generate_merge_sql(catalog, target_schema, source_schema, volume, stage_fold
   using temp_view as source
   on target.{primary_key} = source.{primary_key}
     when matched 
-     and source.delta_flg != 'U' 
+     and source.delta_flg = 'U' 
     then
       update set 
       \t {upd}
+    when matched 
+     and source.delta_flg = 'D' 
+    then
+      delete  
     when not matched 
-     and source.delta_flg = 'I' 
+      {"and source.delta_flg = 'I'" if load_type == 'Incremental' else ''}
     then
       insert (
       \t {fld}
@@ -207,4 +221,5 @@ def generate_merge_sql(catalog, target_schema, source_schema, volume, stage_fold
       \t {val}
     );
   """
+  
   return sql

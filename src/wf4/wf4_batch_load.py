@@ -1,4 +1,12 @@
 # Databricks notebook source
+# MAGIC %md
+# MAGIC ### Loader 
+# MAGIC - Loads initial load and incremental load files
+# MAGIC - Catalog, source, stage and target schema, volume and locations are set in the configuration YAML file
+# MAGIC - Type of the load controled by the dropdown widget
+
+# COMMAND ----------
+
 # DBTITLE 1,installations
 # MAGIC %pip install pyyaml
 # MAGIC %restart_python
@@ -17,7 +25,8 @@
 
 # DBTITLE 1,parameters
 # widget
-dbutils.widgets.text('yaml_file','wf4_config.yaml',"CONFIG FILE")
+dbutils.widgets.text('yaml_file','wf4_config.yaml',"01. CONFIG FILE")
+dbutils.widgets.dropdown("load_type","Initial", [ "Initial","Incremental"],"02. LOAD TYPE")
 
 yaml_file = dbutils.widgets.get('yaml_file')
 
@@ -32,7 +41,8 @@ params = { 'yaml_file': yaml_file
           ,"source_folder": conf['parquet']['source_folder']
           ,"stage_folder": conf['parquet']['stage_folder']
           ,"target_tables": conf['parquet']['target_tables']
-          ,"control_table": conf['parquet']['control_table']}
+          ,"control_table": conf['parquet']['control_table']
+          ,"load_type": dbutils.widgets.get('load_type')}
 
 
 # create params  
@@ -49,7 +59,7 @@ for k in params: print(f'\t{k} - ',eval(k), eval(f'type({k})'))
 
 # COMMAND ----------
 
-# DBTITLE 1,load files
+# DBTITLE 1,load
 # list new arrived files
 files = spark.sql(f"""select file_name
                              ,split_part(file_name, '.', 1) tbl
@@ -57,9 +67,13 @@ files = spark.sql(f"""select file_name
                         where not file_loaded
                     """).collect()
 
+if load_type == 'Initial':
+  files = [x for x in files if 'parquet_' not in x.file_name]
+
 # load files in the list
 for file in files:
-  merge_sql = generate_merge_sql(catalog, target_schema, source_schema, volume, stage_folder, file)
+
+  merge_sql = generate_merge_sql(catalog, target_schema, source_schema, volume, stage_folder, file, load_type)
   
   # print(merge_sql)
 
@@ -71,15 +85,6 @@ for file in files:
   # print result
   print (f"""Loaded file /Volumes/{catalog}/{source_schema}/{volume}/{stage_folder}/{file['file_name']} 
              into table {catalog}.{target_schema}.{file['tbl']}""")
-
-# COMMAND ----------
-
-# DBTITLE 1,reset
-# MAGIC %sql
-# MAGIC update ysm.premiere.batch_file_control set file_loaded = false and file_processed_timestamp = null;
-# MAGIC -- truncate table ysm.premiere.patient_ins;
-# MAGIC select * from ysm.premiere.batch_file_control;
-# MAGIC
 
 # COMMAND ----------
 
