@@ -1,0 +1,33 @@
+parquet:
+  catalog: ysm
+  source_schema: ysm_schema
+  target_schema: premiere
+  volume: ysm_schema_vol
+  source_folder: premiere/parquet
+  target_folder: premiere/ddl
+  stage_folder: premiere/stage
+  target_tables: 
+    - patient_ins: 
+        template_file: /Volumes/ysm/ysm_schema/ysm_schema_vol/premiere/parquet/patient_ins.AVERA_snappy.parquet
+        primary_key: patient_sk
+        not_null_fields: 
+          - patient_sk
+          - patient_bk
+          - record_insert_timestamp
+          - record_insert_id
+          - record_update_timestamp
+          - record_update_id
+          - job_run_id
+          - active_patient_ind
+          - vendor_code
+          - data_source_code
+          - client_code
+          - medical_record_number
+          - birth_datetime
+          - administrative_sex_code
+          - source_update_timestamp
+        foreign_keys:
+          - name: fk1
+            reference_table: practitioner
+            reference_key: practitioner_sk
+
