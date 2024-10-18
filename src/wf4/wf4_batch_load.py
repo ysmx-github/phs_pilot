@@ -85,16 +85,3 @@ for file in files:
   # print result
   print (f"""Loaded file /Volumes/{catalog}/{source_schema}/{volume}/{stage_folder}/{file['file_name']} 
              into table {catalog}.{target_schema}.{file['tbl']}""")
-
-# COMMAND ----------
-
-# DBTITLE 1,validation
-# MAGIC %sql
-# MAGIC select vendor_code, client_code, count(*) from ysm.premiere.patient_ins group by 1,2  order by 1,2;
-# MAGIC -- select count(*) from from ysm.premiere.patient_ins where record_insert_id='databricks';
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC select vendor_code, client_code, count(*) from ysm.premiere.patient_ins_dlt group by 1,2 order by 1,2;
-# MAGIC -- select count(*) from from ysm.premiere.patient_ins_dlt where record_insert_id='databricks';
