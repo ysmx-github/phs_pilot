@@ -100,18 +100,19 @@ for d in target_tables:
 
 # COMMAND ----------
 
-# DBTITLE 1,validation
-spark.sql("select * from ysm.information_schema.columns where table_name = 'patient_ins'").display()
-spark.sql("select * from ysm.information_schema.table_constraints where table_name = 'patient_ins'").display()
-
-# COMMAND ----------
-
 # DBTITLE 1,cleanup
-# MAGIC %sql
-# MAGIC alter table ysm.premiere.patient_ins drop constraint patient_ins_practitioner_fk1;
+spark.sql(f"alter table {catalog}.{target_schema}.{target_table} drop constraint if exists patient_ins_practitioner_fk1");
+dbutils.fs.rm(f"/Volumes/{catalog}/{source_schema}/{volume}/premiere/stage/", True)
 
 # COMMAND ----------
 
+# DBTITLE 1,validation
+spark.sql(f"select * from {catalog}.information_schema.columns where table_name = '{target_table}'").display()
+spark.sql(f"select * from {catalog}.information_schema.table_constraints where table_name = '{target_table}'").display()
+
+# COMMAND ----------
+
+# DBTITLE 1,batch_file_control
 # MAGIC %sql
 # MAGIC create or replace table ysm.premiere.batch_file_control 
 # MAGIC    ( file_name string

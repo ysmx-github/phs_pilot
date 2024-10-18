@@ -31,6 +31,13 @@ def _create_ddl_folder (catalog,schema,volume,target_folder):
   dbutils.fs.mkdirs(fldr)
   return fldr
 
+## cast double to ling #######################################################
+def _cast_df(df):
+  for x in df.schema.jsonValue()['fields']:
+    if x['type'] == 'double':
+      df = df.withColumn(x['name'], F.col(x['name']).cast('long'))
+  return df
+
 ## create target table ####################################################################
 def _create_table (template_file, target_table_fq=None, catalog=None,target_schema=None,target_table=None):
 
@@ -44,9 +51,7 @@ def _create_table (template_file, target_table_fq=None, catalog=None,target_sche
         .limit(100)
         .drop('newline'))
 
-  for x in df.schema.jsonValue()['fields']:
-    if x['type'] == 'double':
-      df = df.withColumn(x['name'], F.col(x['name']).cast('long'))
+  df = _cast_df(df)
 
   df.write.saveAsTable(target_table_fq)
 

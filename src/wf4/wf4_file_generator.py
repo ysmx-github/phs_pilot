@@ -67,8 +67,9 @@ if file_type == 'Initial':
     
     # transform and copy all files
     df = spark.read.parquet(f'{raw_file_location}/{file_name}').withColumnRenamed('newline','delta_flg')
-    
+    df = _cast_df(df)
     df.write.mode('overwrite').parquet(f'{stage_location}/{file_name}')
+
 
     cnt = df.count()
 
@@ -94,7 +95,7 @@ target_table = random_file_name.split('.')[0]
 if file_type == 'Initial':
   print('Did not generate any incremental load files')
 else:
-  if file_type in ['U','D']:
+  if file_type == 'D':
     df = (spark
           .read
           .parquet(f'{raw_file_location}/{random_file_name}')
@@ -103,6 +104,17 @@ else:
           .withColumn ('t',F.ntile(tiles).over(Window.orderBy(F.lit(None))))
           .where(F.col('t') == F.lit(random_tile))
           .drop('t'))
+    
+  elif file_type == 'U':
+    df = (spark
+          .read
+          .parquet(f'{raw_file_location}/{random_file_name}')
+          .drop('newline')
+          .withColumn ('delta_flg',F.lit(file_type))
+          .withColumn ('t',F.ntile(tiles).over(Window.orderBy(F.lit(None))))
+          .where(F.col('t') == F.lit(random_tile))
+          .drop('t')
+          .withColumn('record_insert_id', F.lit('databricks')))
     
   elif file_type == 'I':
     max_id = spark.table(f"{catalog}.{target_schema}.{target_table}").selectExpr("max(patient_sk) max_id").first()[0]
@@ -128,6 +140,7 @@ else:
   if _match_ordinality (df, catalog, target_schema, target_table) and _match_field_names_symmetric(df, catalog, target_schema, target_table):
 
     # write the file
+    df = _cast_df(df)
     df.write.mode('overwrite').parquet(fnfq)
     
     # insert row into the status table
