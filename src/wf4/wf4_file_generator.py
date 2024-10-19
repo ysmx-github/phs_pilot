@@ -103,7 +103,8 @@ else:
           .withColumn ('delta_flg',F.lit(file_type))
           .withColumn ('t',F.ntile(tiles).over(Window.orderBy(F.lit(None))))
           .where(F.col('t') == F.lit(random_tile))
-          .drop('t'))
+          .drop('t')
+          .withColumn('record_update_timestamp', F.from_unixtime(F.unix_timestamp('record_update_timestamp')+10).cast('timestamp')))
     
   elif file_type == 'U':
     df = (spark
@@ -114,7 +115,8 @@ else:
           .withColumn ('t',F.ntile(tiles).over(Window.orderBy(F.lit(None))))
           .where(F.col('t') == F.lit(random_tile))
           .drop('t')
-          .withColumn('record_insert_id', F.lit('databricks')))
+          .withColumn('record_insert_id', F.lit('databricks'))
+          .withColumn('record_update_timestamp', F.from_unixtime(F.unix_timestamp('record_update_timestamp')+10).cast('timestamp')))
     
   elif file_type == 'I':
     max_id = spark.table(f"{catalog}.{target_schema}.{target_table}").selectExpr("max(patient_sk) max_id").first()[0]

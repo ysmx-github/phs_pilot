@@ -75,8 +75,6 @@ for file in files:
 
   merge_sql = generate_merge_sql(catalog, target_schema, source_schema, volume, stage_folder, file, load_type)
   
-  # print(merge_sql)
-
   spark.sql(merge_sql)
 
   # update status table
@@ -85,3 +83,11 @@ for file in files:
   # print result
   print (f"""Loaded file /Volumes/{catalog}/{source_schema}/{volume}/{stage_folder}/{file['file_name']} 
              into table {catalog}.{target_schema}.{file['tbl']}""")
+  
+  print('\n',merge_sql)
+
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC
