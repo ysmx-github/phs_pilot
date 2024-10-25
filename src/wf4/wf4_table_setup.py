@@ -39,7 +39,9 @@ params = { 'yaml_file': yaml_file
           ,"volume": conf['parquet']['volume']
           ,"source_folder": conf['parquet']['source_folder']
           ,"target_folder": conf['parquet']['target_folder']
-          ,"target_tables": conf['parquet']['target_tables']}
+          ,"target_tables": conf['parquet']['target_tables']
+          ,"control_table": conf['parquet']['control_table']
+          }
 
 # create params  
 for k, v in params.items():
@@ -112,14 +114,13 @@ spark.sql(f"select * from {catalog}.information_schema.table_constraints where t
 
 # COMMAND ----------
 
-# DBTITLE 1,batch_file_control
-# MAGIC %sql
-# MAGIC create or replace table ysm.premiere.batch_file_control 
-# MAGIC    ( file_name string
-# MAGIC    , file_arrival_timestamp timestamp
-# MAGIC    , file_number_of_rows bigint
-# MAGIC    , file_processed_timestamp timestamp
-# MAGIC    , file_loaded boolean)
-# MAGIC ;
-# MAGIC
-# MAGIC describe extended ysm.premiere.batch_file_control; 
+# DBTITLE 1,control table
+spark.sql(f"""create or replace table {catalog}.{target_schema}.{control_table} 
+                ( file_name string
+                , file_arrival_timestamp timestamp
+                , file_number_of_rows bigint
+                , file_processed_timestamp timestamp
+                , file_loaded boolean)
+          """)
+
+spark.sql(f'describe extended {catalog}.{target_schema}.{control_table}').display()

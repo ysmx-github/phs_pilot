@@ -63,7 +63,7 @@ for k in params: print(f'\t{k} - ',eval(k), eval(f'type({k})'))
 # list new arrived files
 files = spark.sql(f"""select file_name
                              ,split_part(file_name, '.', 1) tbl
-                         from {catalog}.{target_schema}.batch_file_control 
+                         from {catalog}.{target_schema}.{control_table} 
                         where not file_loaded
                     """).collect()
 
@@ -85,9 +85,3 @@ for file in files:
              into table {catalog}.{target_schema}.{file['tbl']}""")
   
   print('\n',merge_sql)
-
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC

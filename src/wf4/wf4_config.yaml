@@ -1,15 +1,15 @@
 parquet:
-  catalog: ysm
-  source_schema: ysm_schema
-  target_schema: premiere
-  volume: ysm_schema_vol
-  source_folder: premiere/parquet
-  target_folder: premiere/ddl
-  stage_folder: premiere/stage
+  catalog: edm_pilot
+  source_schema: source
+  target_schema: target
+  volume: edm_pilot_vol
+  source_folder: raw
+  target_folder: ddl
+  stage_folder: stage
   control_table: batch_file_control
   target_tables: 
     - patient_ins: 
-        template_file: /Volumes/ysm/ysm_schema/ysm_schema_vol/premiere/parquet/patient_ins.AVERA_snappy.parquet
+        template_file: /Volumes/edm_pilot/source/edm_pilot_vol/raw/patient_ins.AVERA_snappy.parquet
         primary_key: patient_sk
         not_null_fields: 
           - patient_sk

@@ -160,5 +160,4 @@ else:
 # COMMAND ----------
 
 # DBTITLE 1,validation
-# MAGIC %sql
-# MAGIC select * from ysm.premiere.batch_file_control order by file_arrival_timestamp;
+spark.sql(f'select * from {catalog}.{target_schema}.{control_table} order by file_arrival_timestamp').display()
